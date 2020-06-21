@@ -10,6 +10,13 @@ library(mapproj)
 options(tigris_use_cache = TRUE)
 
 counties <- readRDS("../data/counties.rds")
+states <- get_acs(geography = "state", 
+                  variables = "B19013_001",
+                  survey = "acs5")$NAME %>% 
+  unique()
+
+income_time_data <- readRDS("../data/income_time.rds")
+
 source("helpers.R")
 
 theme_custom <- function() {
@@ -32,6 +39,27 @@ ui <- fluidPage(
   ),
   
   navbarPage(title = "Exploring Quality of Life Using US Census Data",
+             tabPanel(title = "About",
+                      titlePanel("About The App"),
+                      h4("General Info"),
+                      p("Welcome! This is a US Census Bureau data explorer created
+                        using R Shiny. The purpose of this app is to give users a glimpse
+                        into the vast amount of data the US Census Burea has to offer.
+                        In particular, the app aims to provide some background about the
+                        quality of life across the united states using population, 
+                        income, and poverty metrics. Enjoy!"),
+                      h4("Population"),
+                      p("This app allows users to interact with two different graphics
+                        inovlving population. The first map allows users to view the population 
+                        density at both the state level and county level (given a particular
+                        state). The data is pulled from the American Community Survey, which is an 
+                        ongoing surrvey that is used to measure changing social and economic characteristics.
+                        The second map
+                        allows users to see the percentage of a certain race across the United States
+                        for each county. This data is pulled from the 2010 Decennial census, which is 
+                        conducted every 10 years and is used to get specific counts for metrics.", a("Click here to learn more", href="https://www.census.gov/programs-surveys/decennial-census/about/census-acs.html")),
+                      h4("Income"),
+                      h4("Poverty")),
              tabPanel(title = "Population",
                       sidebarLayout(
                         
@@ -86,7 +114,9 @@ ui <- fluidPage(
                         ),
                         
                         mainPanel(
+                          h4("Population Density for States and Counties"),
                           leafletOutput(outputId = "gen_population", height = 300),
+                          h4("Percentage of County Populations By Race"),
                           plotOutput(outputId = "race_map")
                         )
   
@@ -95,10 +125,11 @@ ui <- fluidPage(
              tabPanel(title = "Income",
                       sidebarLayout(
                         sidebarPanel(
+                          
                           selectInput(
-                            inputId =  "year_income", 
+                            inputId =  "select_year_income", 
                             label = "Select year:", 
-                            choices = 2005:2018,
+                            choices = 2014:2018,
                             selected = 2018,
                             width = "40%"
                           ),
@@ -124,15 +155,28 @@ ui <- fluidPage(
                                                       "5 year" = 5), 
                                        selected = 1,
                                        inline = TRUE),
+                          
                           actionButton(inputId = "get_income_map",
                                        label = "Pull data"),
+                          hr(),
                           
-                          hr()
-                      ),
+                          selectInput(inputId = "income_states_select", 
+                                      label = "Select states: ", 
+                                      choices = states,
+                                      multiple = TRUE),
+                          
+                          actionButton(inputId = "get_income_timeline",
+                                       label = "Pull data"),
+                        ),
                       
-                      mainPanel(
-                        leafletOutput(outputId = "map_income", height = 300)
-                      ))),
+                        mainPanel(
+                          h4("Median Annual Income for States and Counties"),
+                          leafletOutput(outputId = "income_map", height = 300),
+                          h4("Median Annual Income Across Time"),
+                          plotOutput(outputId = "income_timeline"),
+                        )
+                      
+                      )),
              
              tabPanel(title = "Poverty"))
 )
@@ -141,7 +185,18 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   observe({
-    shinyjs::toggleElement("state_input", input$geo == "c", time = 0.0)
+    if(input$geo == "c") {
+      shinyjs::hide("state_input", time = 0.0)
+    }
+    else {
+      shinyjs::show("state_input", time = 0.0)
+    }
+    if(input$geo_income == "c") {
+      shinyjs::hide("state_input_income", time = 0.0)
+    }
+    else {
+      shinyjs::show("state_input_income", time = 0.0)
+    }
   })
   
   gen_data <- eventReactive(input$get_gen_pop, {
@@ -191,17 +246,31 @@ server <- function(input, output) {
   })
   
   income_data <- eventReactive(input$get_income_map, {
-    county_income <- get_acs(geography = if(input$geo_income == "s") "county" else "state", 
-                             variables = "B19013_001", 
-                             shift_geo = if(input$geo_income == "c") TRUE else FALSE, 
-                             geometry = TRUE,
-                             year = as.integer(input$year_income), 
-                             survey = if(input$span_income == 1) "acs1" else "acs5",
-                             state = if(input$geo_income == "s") input$state_input else NULL)
+    
+    get_acs(geography = if(input$geo_income == "s") "county" else "state", 
+            variables = "B19013_001",
+            shift_geo = if(input$geo_income == "c") TRUE else FALSE,
+            geometry = TRUE,
+            year = as.integer(input$select_year_income), 
+            survey = if(input$span_income == 1) "acs1" else "acs5",
+            state = if(input$geo_income == "s") input$state_input_income else NULL)
   })
   
-  output$map_income <- renderPlot({
+  output$income_map <- renderLeaflet({
     mapview(income_data(), zcol = "estimate")@map
+  })
+  
+  income_time_data_display <- eventReactive(input$get_income_timeline, {
+    income_time_data %>% 
+      filter(name %in% input$income_states_select)
+  })
+  
+  output$income_timeline <- renderPlot({
+    income_time_data_display() %>% 
+      ggplot(mapping = aes(x = year, y = estimate, color = name)) +
+      geom_line(size = 1.5) +
+      labs(x = "Year", y = "Median Annual Income") + 
+      theme_custom()
   })
   
 }
