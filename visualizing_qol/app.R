@@ -1,5 +1,5 @@
 library(shiny)
-library(shinythemes) # add a theme: https://rstudio.github.io/shinythemes/
+library(shinythemes)
 library(tidyverse)
 library(mapview)
 library(leaflet)
