@@ -4,7 +4,7 @@
 
 ## Introduction
 
-###General Information
+### General Information
 Welcome! This is a US Census Bureau data explorer created
 using R Shiny. The purpose of this app is to give users a glimpse
 into the vast amount of data the US Census Burea has to offer.
@@ -14,7 +14,7 @@ income, and poverty metrics. Some more information about each
 section is provided below. When specifying 'State' inputs, please
 provide the state's abbreviation (e.g. CA). Enjoy!
 
-###Population
+### Population
 This app allows users to interact with two different graphics
 involving population. The first map allows users to view the population 
 density at both the state level and county level (given a particular
@@ -24,7 +24,7 @@ The second map allows users to see the percentage of a certain race across the U
 for each county. This data is pulled from the 2010 Decennial census, which is 
 conducted every 10 years and is used to get specific counts for metrics.
 
-###Income
+### Income
 Similar to population, the app includes a map of the United States
 that allows users to view the median household income across states and
 counties. The second graph allows users to compares states by viewing
@@ -33,7 +33,7 @@ years. Both graphs pull data from the American Community Survey. The second
 graph does not let users choose the estimate span, and it defaults to the 5
 year span for better accuracy.
 
-###Poverty
+### Poverty
 p("The poverty tab is slightly different. Given a year and state,
 the poverty tab will output 3 grahpics. The first two are 'tract' maps, which is similar
 to a 'county' map but it splits the counties into smaller areas. The first graphic
@@ -43,7 +43,7 @@ graphic simply makes a plot of poverty vs. unemployment rate and presents a line
 on the scatter plot. This allows the user to see how many outliers there are and note
 if there are any tracts with interesting values (very high unemployment rate but low poverty). NOTE: since this tab is pulling 3 graphics at once, the data takes 10-15 seconds to fully load.
 
-###Additional Notes
+### Additional Notes
 Most of the data in the app is pulled from the web in real time using APIs. 
 If you have poor internet connection or request large amounts of data,
 the app could appear to freeze (although it is just taking a long time

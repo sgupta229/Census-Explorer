@@ -18,8 +18,9 @@ options(tigris_use_cache = TRUE)
 counties <- readRDS("../data/counties.rds")
 states <- get_acs(geography = "state", 
                   variables = "B19013_001",
-                  survey = "acs5")$NAME %>% 
+                  survey = "acs5")$NAME %>%
   unique()
+  
 
 income_time_data <- readRDS("../data/income_time.rds")
 
@@ -361,7 +362,7 @@ server <- function(input, output) {
               summary_var = 'B17001_001', 
               state = input$state_input_pov, 
               geometry = TRUE, 
-              year = 2017) %>%
+              year = as.integer(input$select_year_pov)) %>%
         rename(pop = summary_est) %>%
         filter(pop>0)%>%
         mutate(pov_rate = estimate/pop) %>%
@@ -374,7 +375,7 @@ server <- function(input, output) {
       get_acs(geography='tract', 
               variables = c(male_labor_tables, female_labor_tables), 
               state=input$state_input_pov, 
-              year=2017)%>% 
+              year=as.integer(input$select_year_pov))%>% 
       group_by(GEOID) %>%
       summarize(labor_force_est = sum(estimate, na.rm=T))
     
@@ -382,7 +383,7 @@ server <- function(input, output) {
       get_acs(geography='tract', 
               variables = c(male_unempl, female_unempl), 
               state=input$state_input_pov, 
-              year=2017)%>%
+              year=as.integer(input$select_year_pov))%>%
       group_by(GEOID) %>%
       summarize(unempl_est = sum(estimate, na.rm=T))
     
