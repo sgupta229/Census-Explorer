@@ -95,8 +95,7 @@ ui <- fluidPage(
                       br(),
                       h4("Poverty"),
                       p("The poverty tab is slightly different. Given a year and state,
-                        the poverty tab will output 3 grahpics. The first two are 'tract' maps, which is similar
-                        to a 'county' map but it splits the counties into smaller areas. The first graphic
+                        the poverty tab will output 3 graphics that looks at the counties within the state The first graphic
                         maps percent of people whose 12 month income was below the poverty level. The second
                         graphic is the percent of people between 16-64 (working age) that do not have a job. The third
                         graphic simply makes a plot of poverty vs. unemployment rate and presents a linear model
@@ -358,7 +357,7 @@ server <- function(input, output) {
   })
   
   pov_data <- eventReactive(input$get_pov_map, {
-      get_acs(geography = "tract", 
+      get_acs(geography = "county", 
               variables = "B17001_002",  
               summary_var = 'B17001_001', 
               state = input$state_input_pov, 
@@ -373,7 +372,7 @@ server <- function(input, output) {
   
   unempl_data <- eventReactive(input$get_pov_map, {
     total_labor_force <- 
-      get_acs(geography='tract', 
+      get_acs(geography='county', 
               variables = c(male_labor_tables, female_labor_tables), 
               state=input$state_input_pov, 
               year=as.integer(input$select_year_pov))%>% 
@@ -381,7 +380,7 @@ server <- function(input, output) {
       summarize(labor_force_est = sum(estimate, na.rm=T))
     
     total_unempl <- 
-      get_acs(geography='tract', 
+      get_acs(geography='county', 
               variables = c(male_unempl, female_unempl), 
               state=input$state_input_pov, 
               year=as.integer(input$select_year_pov))%>%
