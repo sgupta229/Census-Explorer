@@ -2,6 +2,8 @@
 
 ## Link to App
 
+[https://supta.shinyapps.io/US_Census_Data_Explorer/](https://supta.shinyapps.io/US_Census_Data_Explorer/)
+
 ## Introduction
 
 ### General Information
@@ -34,7 +36,7 @@ graph does not let users choose the estimate span, and it defaults to the 5
 year span for better accuracy.
 
 ### Poverty
-p("The poverty tab is slightly different. Given a year and state,
+ poverty tab is slightly different. Given a year and state,
 the poverty tab will output 3 grahpics. The first two are 'tract' maps, which is similar
 to a 'county' map but it splits the counties into smaller areas. The first graphic
 maps percent of people whose 12 month income was below the poverty level. The second

@@ -1,0 +1,12 @@
+name: US_Census_Data_Explorer
+title: US_Census_Data_Explorer
+username:
+account: supta
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2496839
+bundleId: 3310012
+url: https://supta.shinyapps.io/US_Census_Data_Explorer/
+when: 1592983834.99914
+asMultiple: FALSE
+asStatic: FALSE

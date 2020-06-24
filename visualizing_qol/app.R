@@ -7,6 +7,7 @@ library(maps)
 library(mapproj)
 library(tidycensus)
 library(sf)
+library(rsconnect)
 
 source("helpers.R")
 
@@ -15,14 +16,14 @@ source("helpers.R")
 census_api_key("d780304953ca8d5be8b1878b96b27aeaf557e62d")
 options(tigris_use_cache = TRUE)
 
-counties <- readRDS("../data/counties.rds")
+counties <- readRDS("data/counties.rds")
 states <- get_acs(geography = "state", 
                   variables = "B19013_001",
                   survey = "acs5")$NAME %>%
   unique()
   
 
-income_time_data <- readRDS("../data/income_time.rds")
+income_time_data <- readRDS("data/income_time.rds")
 
 theme_custom <- function() {
   theme_bw() +
