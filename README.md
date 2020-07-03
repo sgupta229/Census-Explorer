@@ -7,14 +7,14 @@
 ## Introduction
 
 ### General Information
-Welcome! This is a US Census Bureau data explorer created
+This is a US Census Bureau data explorer created
 using R Shiny. The purpose of this app is to give users a glimpse
 into the vast amount of data the US Census Burea has to offer.
 In particular, the app aims to provide some background about the
 quality of life across the United States using population, 
 income, and poverty metrics. Some more information about each
 section is provided below. When specifying 'State' inputs, please
-provide the state's abbreviation (e.g. CA). Enjoy!
+provide the state's abbreviation (e.g. CA).
 
 ### Population
 This app allows users to interact with two different graphics
@@ -43,7 +43,7 @@ maps percent of people whose 12 month income was below the poverty level. The se
 graphic is the percent of people between 16-64 (working age) that do not have a job. The third
 graphic simply makes a plot of poverty vs. unemployment rate and presents a linear model
 on the scatter plot. This allows the user to see how many outliers there are and note
-if there are any tracts with interesting values (very high unemployment rate but low poverty). NOTE: since this tab is pulling 3 graphics at once, the data takes 10-15 seconds to fully load.
+if there are any tracts with interesting values (very high unemployment rate but low poverty).
 
 ### Additional Notes
 Most of the data in the app is pulled from the web in real time using APIs. 
@@ -58,6 +58,3 @@ fully loaded yet. If you do, you may have to restart the application.
 
 * All information and data is pulled from [www.census.gov](https://www.census.gov/) using
 their APIs.
-* I got inspiration for the race population map (second map under the population tab) from
-[R Shiny tutorial](https://shiny.rstudio.com/tutorial/written-tutorial/lesson5/). In particular, I used the helpers.R script to plot percent maps (the rest of the maps
-were all developed by me)
